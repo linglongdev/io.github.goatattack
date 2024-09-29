@@ -1,0 +1,95 @@
+From 59b45c21a9a9a28d1a5c5ca350b8cc0e42d9f9ff Mon Sep 17 00:00:00 2001
+From: Shenyufan <751890223@qq.com>
+Date: Sun, 29 Sep 2024 21:08:26 +0800
+Subject: [PATCH] fix
+
+---
+ src/Cargo/Makefile.am        | 2 +-
+ src/Game/Makefile.am         | 2 +-
+ src/MapEditor/Makefile.am    | 2 +-
+ src/MasterServer/Makefile.am | 2 +-
+ src/Server/Makefile.am       | 2 +-
+ src/shared/Makefile.am       | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/Cargo/Makefile.am b/src/Cargo/Makefile.am
+index 24d9c73..1c118da 100644
+--- a/src/Cargo/Makefile.am
++++ b/src/Cargo/Makefile.am
+@@ -6,7 +6,7 @@ endif
+ 
+ goatattack_cargo_SOURCES = main.cpp
+ 
+-goatattack_cargo_CXXFLAGS = -I./include -I../shared/include -pedantic -Wextra -Wno-unused-parameter -Wno-unused-result
++goatattack_cargo_CXXFLAGS = -I$(PREFIX)/include -I./include -I../shared/include -pedantic -Wextra -Wno-unused-parameter -Wno-unused-result
+ 
+ goatattack_cargo_LDADD = -L../shared -lshared -lpng
+ 
+diff --git a/src/Game/Makefile.am b/src/Game/Makefile.am
+index 94ccdfd..4883745 100644
+--- a/src/Game/Makefile.am
++++ b/src/Game/Makefile.am
+@@ -3,7 +3,7 @@ include ../Engine/game.mk
+ 
+ bin_PROGRAMS = goatattack
+ goatattack_SOURCES = $(sources)
+-goatattack_CXXFLAGS = $(cxxflags) -DPNG_SKIP_SETJMP_CHECK -pedantic -Wextra -Wno-unused-parameter -Wno-unused-result
++goatattack_CXXFLAGS = $(cxxflags) -I$(PREFIX)/include -DPNG_SKIP_SETJMP_CHECK -pedantic -Wextra -Wno-unused-parameter -Wno-unused-result
+ goatattack_LDADD = $(ldadd) -lGL -lSDL2 -lSDL2_mixer -lfreetype
+ iconsdir = $(datarootdir)/icons/hicolor/scalable/apps
+ dist_icons_DATA = ../../packages/linux/goatattack.svg
+diff --git a/src/MapEditor/Makefile.am b/src/MapEditor/Makefile.am
+index fd41145..008dc5f 100644
+--- a/src/MapEditor/Makefile.am
++++ b/src/MapEditor/Makefile.am
+@@ -3,7 +3,7 @@ bin_PROGRAMS = goatattack-mapeditor
+ goatattack_mapeditor_SOURCES = main.cpp
+ goatattack_mapeditor_SOURCES += src/CompileThreadBlock.cpp src/CompileThread.cpp src/CompileThreadPixel.cpp src/EditableLight.cpp src/EditableMap.cpp src/EditableObject.cpp src/MapEditor.cpp src/MapEditorLightmap.cpp
+ 
+-goatattack_mapeditor_CXXFLAGS = -I./include -I../shared/include -pedantic -Wextra -Wno-unused-parameter -Wno-unused-result
++goatattack_mapeditor_CXXFLAGS =  -I$(PREFIX)/include -I./include -I../shared/include -pedantic -Wextra -Wno-unused-parameter -Wno-unused-result
+ goatattack_mapeditor_CXXFLAGS += -DDATA_DIRECTORY=$(targetdatadir) -DPNG_SKIP_SETJMP_CHECK
+ goatattack_mapeditor_LDADD = -L../shared -lshared -lpng -lGL -lSDL2 -lSDL2_mixer -lfreetype
+ 
+diff --git a/src/MasterServer/Makefile.am b/src/MasterServer/Makefile.am
+index ab7d666..88a291c 100644
+--- a/src/MasterServer/Makefile.am
++++ b/src/MasterServer/Makefile.am
+@@ -2,7 +2,7 @@ if !CARGO_ONLY
+ bin_PROGRAMS = goatattack-masterserver
+ goatattack_masterserver_SOURCES = main.cpp
+ goatattack_masterserver_SOURCES += src/MasterServer.cpp
+-goatattack_masterserver_CXXFLAGS = -I ./include -I ../shared/include -pedantic -Wextra -Wno-unused-parameter -Wno-unused-result
++goatattack_masterserver_CXXFLAGS = -I$(PREFIX)/include  -I ./include -I ../shared/include -pedantic -Wextra -Wno-unused-parameter -Wno-unused-result
+ goatattack_masterserver_LDADD = -L../shared -lshared
+ man6_MANS = man/goatattack-masterserver.6
+ endif
+diff --git a/src/Server/Makefile.am b/src/Server/Makefile.am
+index 13bc4cf..644dc89 100644
+--- a/src/Server/Makefile.am
++++ b/src/Server/Makefile.am
+@@ -3,7 +3,7 @@ include ../Engine/game.mk
+ 
+ bin_PROGRAMS = goatattack-server
+ goatattack_server_SOURCES = $(sources)
+-goatattack_server_CXXFLAGS = $(cxxflags) -pedantic -Wextra -Wno-unused-parameter -Wno-unused-result -DDEDICATED_SERVER -DPNG_SKIP_SETJMP_CHECK
++goatattack_server_CXXFLAGS = $(cxxflags) -I$(PREFIX)/include -pedantic -Wextra -Wno-unused-parameter -Wno-unused-result -DDEDICATED_SERVER -DPNG_SKIP_SETJMP_CHECK
+ goatattack_server_LDADD = $(ldadd) -lfreetype
+ man6_MANS = man/goatattack-server.6
+ endif
+diff --git a/src/shared/Makefile.am b/src/shared/Makefile.am
+index 1bdc48b..2ceaf03 100644
+--- a/src/shared/Makefile.am
++++ b/src/shared/Makefile.am
+@@ -3,7 +3,7 @@ libshared_a_SOURCES = ../shared/src/AABB.cpp ../shared/src/Animation.cpp ../shar
+ 
+ libshared_a_SOURCES += ../shared/i18n/I18NEnglish.cpp ../shared/i18n/I18NGerman.cpp ../shared/i18n/I18NFrench.cpp ../shared/i18n/I18NPortuguese.cpp ../shared/i18n/I18NSpanish.cpp
+ 
+-libshared_a_CXXFLAGS = -I./include -I../shared/include -pedantic -Wextra -Wno-unused-parameter -Wno-unused-result -DPNG_SKIP_SETJMP_CHECK
++libshared_a_CXXFLAGS = -I$(PREFIX)/include -I./include -I../shared/include -pedantic -Wextra -Wno-unused-parameter -Wno-unused-result -DPNG_SKIP_SETJMP_CHECK
+ 
+ if DEDICATED_SERVER
+ libshared_a_CXXFLAGS += -DDEDICATED_SERVER
+-- 
+2.43.4
+
